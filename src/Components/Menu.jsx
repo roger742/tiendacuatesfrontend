@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLast, ChevronFirst } from "lucide-react";
+import { AuthContext } from "../context/AuthContext";
 import Logo from "./img/imagen1.jpg";
 import ProductosIcon from "./img/productos.png";
 import CategoriasIcon from "./img/categorias.png";
+import CerrarSesionIcon from "./img/cerrar.png";
 
 const SidebarContext = createContext();
 
@@ -12,6 +14,7 @@ export default function Menu() {
   const [activeItem, setActiveItem] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useContext(AuthContext);
 
   useEffect(() => {
     setExpanded(true);
@@ -24,6 +27,11 @@ export default function Menu() {
 
   function handleLogoClick() {
     navigate("/home");
+  }
+
+  function handleLogout() {
+    logout();
+    navigate("/login");
   }
 
   return (
@@ -46,7 +54,7 @@ export default function Menu() {
               expanded ? "h-16" : "h-0"
             } mx-auto cursor-pointer`}
             alt="Logo"
-            onClick={handleLogoClick} // Añadido manejador de clic
+            onClick={handleLogoClick}
           />
           <button
             onClick={() => setExpanded((curr) => !curr)}
@@ -78,6 +86,21 @@ export default function Menu() {
             />
           </ul>
         </SidebarContext.Provider>
+
+        {/* Botón cerrar sesión */}
+        <div className="p-3 border-t">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 bg-red-600 text-white font-bold px-4 py-2 rounded hover:bg-red-800"
+          >
+            <img
+              src={CerrarSesionIcon}
+              alt="Cerrar sesión"
+              className="w-5 h-5"
+            />
+            {expanded && "Cerrar Sesión"}
+          </button>
+        </div>
       </nav>
     </aside>
   );
